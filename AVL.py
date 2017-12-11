@@ -34,13 +34,15 @@ class Node(object):
         self.left = newchild
     def setright(self, newchild):
         self.right = newchild
+        
 def height(node):
     if node is None:
         return -1
     else:
         return node.height
+    
 class Tree(object):
-     def __init__(self, start=None, current=None):
+    def __init__(self, start=None, current=None):
         self.start = start
         self.current = current
     def height(self, current):
@@ -156,15 +158,14 @@ class Tree(object):
                 else:
                     current = current.getright()
         if found == True:
-            print ("found: "+str(current.getdata())+" "+str(current.dcounter)+ "x times in tree")
             return True
         else:
-            print ("data not found")
+            print (str(data) + " not found")
     def delete(self, data): #if the item sought is the root then will not work.
         self.search(data) #find node to delete
         current = self.current
-        delparent = current.getparent() #deleted node's parent
-        delcurrent = current #deleted node
+        delparent = current.getparent() #to be deleted node's parent
+        delcurrent = current #to be deleted node
         if self.search(data) == True:
             if current.getleft() == None and current.getright() == None:
                 print ("leaf problem")
@@ -184,27 +185,35 @@ class Tree(object):
                     delparent.setright(movedchild)
             elif current.getleft() != None and current.getright() != None:
                 print ("double child problem")
-                #searches for a leaf that is close but less than deleted node
+                #searches for a replacement that is just less than deleted node
                 current = current.getleft()
-                while current.getleft()!= None and current.getright()!=None:
+                while current.getright()!=None:
                     current = current.getright()
-                #deletes the leaf's parent's path to the leaf
+                if current.getleft() != None: #makes replacement a leaf
+                    self.RotateRight(current)
+                #deletes the replacement's parent's path to the replacement
                 if current.getparent().getleft() == current:
                     current.getparent().setleft(None)
                 elif current.getparent().getright() == current:
                     current.getparent().setright(None)
-                #checks the paths of the deleted node's parent to confirm which side it is and place the leaf
+                #checks the paths of the deleted node's parent to confirm which
+                #side it is and place the replacement
                 if delparent.getleft() == delcurrent:
                     delparent.setleft(current)
                     current.setparent(delparent)
+                    current.setright(delcurrent.right)
+                    current.setleft(delcurrent.left)
                 elif delparent.getright() == delcurrent:
                     delparent.setright(current)
                     current.setparent(delparent)
+                    current.setright(delcurrent.right)
+                    current.setleft(delcurrent.left)
             print ("Data: ("+str(data)+") found and removed")
         else:
             print ("data not found or deleted")
-        current = delparent
-        self.rebalance()
+        self.rebalance(delparent)
+        self.rebalance(delparent.right)
+        self.rebalance(delparent.left)
     def __str__(self):
         if self.start is None: return '<empty tree>'
         def recurse(node):
@@ -239,14 +248,14 @@ class Tree(object):
     #def printtree(self):
 
 tre = Tree()
-testdata = list(random.sample(range(30,101), 50))
-print (testdata)
+testdata = list(random.sample(range(30,201), 70))
 for dat in testdata:
     tre.insert(dat)
 
-print ("")
-tre.search(76)
 print (tre.__str__())
-'''
-tre.delete(55)
-tre.search(55)'''
+print ("")
+#test functions
+inp = int(input ("Enter number to delete: "))
+tre.delete(inp) 
+tre.search(inp)
+print (tre.__str__())
