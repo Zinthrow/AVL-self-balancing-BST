@@ -39,10 +39,8 @@ def height(node):
         return -1
     else:
         return node.height
-def update_height(node):
-    node.height = max(height(node.left), height(node.right)) + 1
 class Tree(object):
-    def __init__(self, start=None, current=None):
+     def __init__(self, start=None, current=None):
         self.start = start
         self.current = current
     def height(self, current):
@@ -52,9 +50,14 @@ class Tree(object):
         else:
             return current.height
     def update_height(self, node):
-        node = node
-        node.height = max(height(node.left), height(node.right)) + 1
-        print (node.height)
+        if node is not None:
+            if node.left is None and node.right is not None:
+                node.height = node.right.height + 1
+            elif node.left is not None and node.right is None:
+                node.height = node.left.height + 1
+            elif node.left is not None and node.right is not None:
+                node.height = max(height(node.left), height(node.right)) + 1
+                
     def RotateLeft(self,current):
         current = current
         right = current.right
@@ -99,17 +102,15 @@ class Tree(object):
         current = node
         while current != None:
             self.update_height(current)
-            if self.height(current.left) >= 2 + self.height(current.right):
-                print ("right")
+            if self.height(current.left) > 2 + self.height(current.right):
                 if self.height(current.left.left) >= self.height(current.left.right):
                     self.RotateRight(current)
                 else:
                     self.RotateLeft(current.left)
                     self.RotateRight(current)
-            elif self.height(current.right) >= 2 + self.height(current.left):
-                print ("left")
+            elif self.height(current.right) > 2 + self.height(current.left):
                 if height(current.right.right) >= self.height(current.right.left):
-                    self.RotateRight(current)
+                    self.RotateLeft(current)
                 else:
                     self.RotateRight(current.right)
                     self.RotateLeft(current)
