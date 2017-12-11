@@ -242,11 +242,7 @@ class Tree(object):
                for left_line, right_line in zip(left_lines, right_lines)]
             return lines, pos, width
         return '\n'.join(recurse(self.start) [0])                       
-        
-        
-        
-    #def printtree(self):
-
+   
 tre = Tree()
 testdata = list(random.sample(range(30,201), 70))
 for dat in testdata:
@@ -259,3 +255,4 @@ inp = int(input ("Enter number to delete: "))
 tre.delete(inp) 
 tre.search(inp)
 print (tre.__str__())
+inp = input ("press 'enter' to close")
